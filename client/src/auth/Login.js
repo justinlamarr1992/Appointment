@@ -6,8 +6,8 @@ import LoginForm from "../components/LoginForm";
 import { useDispatch } from "react-redux";
 
 const Login = () => {
-  const [email, setEmail] = useState("ryan@gmail.com");
-  const [password, setPassword] = useState("rrrrrr");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
