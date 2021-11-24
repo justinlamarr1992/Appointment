@@ -13,6 +13,7 @@ import Dashboard from "./user/Dashboard";
 import DashboardSeller from "./user/DashboardSeller";
 import NewHotel from "./hotels/NewHotel";
 import StripeCallback from "./stripe/StripeCallback";
+import EditHotel from "./hotels/EditHotel";
 
 /**
  * Lets create TopNavigation/menu bar so that we can easily TopNavigate between pages
@@ -57,6 +58,14 @@ function App() {
           element={
             <PrivateRoute>
               <StripeCallback />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/hotel/edit/:hotelId"
+          element={
+            <PrivateRoute>
+              <EditHotel />
             </PrivateRoute>
           }
         />
