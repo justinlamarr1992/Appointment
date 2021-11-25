@@ -14,6 +14,7 @@ import {
   sellerHotels,
   remove,
   read,
+  update,
 } from "../controllers/hotel";
 
 router.post("/create-hotel", requireSignin, formidable(), create);
@@ -23,5 +24,12 @@ router.get("/seller-hotels", requireSignin, sellerHotels);
 router.delete("/delete-hotel/:hotelId", requireSignin, hotelOwner, remove);
 // /: needs to be same name as new middleware
 router.get("/hotel/:hotelId", read);
+router.put(
+  "/update-hotel/:hotelId",
+  requireSignin,
+  hotelOwner,
+  formidable(),
+  update
+);
 
 module.exports = router;
