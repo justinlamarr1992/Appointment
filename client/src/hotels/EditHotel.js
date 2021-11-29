@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { DatePicker, Select } from "antd";
+import { Select } from "antd";
 import { read, updateHotel } from "../actions/hotel";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -25,18 +25,19 @@ const EditHotel = () => {
     "https://via.placeholder.com/100x100.png?text=PREVIEW"
   );
   //   testing
-  const [setLocation] = useState("");
+  const [location, setLocation] = useState("");
   //   testing
   // destructuring varibles from state
-  const { title, content, location, price, from, to, bed } = values;
+  const { title, content, price, from, to, bed } = values;
   const [image, setImage] = useState("");
 
   const { hotelId } = useParams();
+
   useEffect(() => {
     loadSellerHotel();
   }, []);
+
   const loadSellerHotel = async () => {
-    // console.log(hotelId);
     let res = await read(hotelId);
     // console.log(res);
     setValues({ ...values, ...res.data });

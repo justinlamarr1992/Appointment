@@ -13,7 +13,7 @@ const HotelEditForm = ({
   handleImageChange,
   handleSubmit,
   //   remove location and setLocation
-  //   location,
+  // location,
   setLocation,
 }) => {
   const { title, content, location, price, bed, from, to } = values;
@@ -46,21 +46,19 @@ const HotelEditForm = ({
           className="form-control m-2"
           value={content}
         />
-        {location && location.length && (
-          <AutoComplete
-            className="form-control m-2"
-            placeholder="Location"
-            apiKey={config}
-            //   change this to but for now skip and figure out later
-            // value={location}
-            // onPlaceSelected={(place) =>
-            //   setValues({ ...values, location: place.formatted_address })
-            // }
-            onPlaceSelected={(place) => setLocation(place.formatted_address)}
-            // onChange={(place) => setLocation(place.formatted_address)}
-            style={{ height: "50px" }}
-          />
-        )}
+        {/* {location && location.length && ( */}
+        <AutoComplete
+          className="form-control m-2"
+          placeholder="Location"
+          apiKey={config}
+          //   change this to but for now skip and figure out later
+          // value={location}
+          // onPlaceSelected={(place) => setValues({ ...values, location: place.formatted_address })}
+          // onPlaceSelected={(place) => setLocation(place.formatted_address)}
+          onChange={(place) => setLocation(place.formatted_address)}
+          style={{ height: "50px" }}
+        />
+        {/* )} */}
 
         <input
           type="number"

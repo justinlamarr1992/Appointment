@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { DatePicker, Select } from "antd";
+import { Select } from "antd";
 import { createHotel } from "../actions/hotel";
 import { useSelector } from "react-redux";
 import HotelCreateForm from "../components/forms/HotelCreateForm";
@@ -15,7 +15,6 @@ const NewHotel = () => {
   const [values, setValues] = useState({
     title: "",
     content: "",
-
     image: "",
     price: "",
     from: "",
