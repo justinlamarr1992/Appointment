@@ -33,7 +33,7 @@ const SmallCard = ({
             <h3 className="card-title">
               {h.title}{" "}
               <span className="float-right text-primary">
-                {currencyFormatter({ amount: h.price, currency: "usd" })}
+                {currencyFormatter({ amount: h.price * 100, currency: "usd" })}
               </span>{" "}
             </h3>
             <p className="alert alert-info">{h.location}</p>

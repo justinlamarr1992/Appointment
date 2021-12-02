@@ -14,6 +14,10 @@ import DashboardSeller from "./user/DashboardSeller";
 import NewHotel from "./hotels/NewHotel";
 import StripeCallback from "./stripe/StripeCallback";
 import EditHotel from "./hotels/EditHotel";
+import ViewHotel from "./hotels/ViewHotel";
+import StripeSuccess from "./stripe/StripeSuccess";
+import StripeCancel from "./stripe/StripeCancel";
+import SearchResult from "./hotels/SearchResult";
 
 /**
  * Lets create TopNavigation/menu bar so that we can easily TopNavigate between pages
@@ -69,6 +73,24 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/hotel/:hotelId" element={<ViewHotel />} />
+        <Route
+          path="/stripe/success/:hotelId"
+          element={
+            <PrivateRoute>
+              <StripeSuccess />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/stripe/cancel"
+          element={
+            <PrivateRoute>
+              <StripeCancel />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/search-result" element={<SearchResult />} />
       </Routes>
     </BrowserRouter>
   );

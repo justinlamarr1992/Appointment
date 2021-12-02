@@ -1,6 +1,9 @@
 import User from "../models/user";
 import Stripe from "stripe";
 import queryString from "query-string";
+import Hotel from "../models/hotel";
+// this
+import Order from "../models/order";
 
 const stripe = Stripe(process.env.STRIPE_SECRET);
 
@@ -99,5 +102,89 @@ export const payoutSetting = async (req, res) => {
     res.json(loginLink);
   } catch (err) {
     console.log("STRIPE PAYOUT SETTING ERR ", err);
+  }
+};
+
+export const stripeSessionId = async (req, res) => {
+  // console.log("you hit stripe session id", req.body.hotelId);
+  // 1 get hotel id from req.body
+  const { hotelId } = req.body;
+  // 2 find the hotel based on hotelId from database
+  const item = await Hotel.findById(hotelId).populate("postedBy").exec();
+  // 3 20% charge as application fee
+  const fee = (item.price * 20) / 100;
+  // 4 create a session (move the const session into this)
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    // 5 purchasing item details, it will be shown in checkout
+    // this change hard coded to dynamics
+    line_items: [
+      {
+        name: item.title,
+        amount: item.price * 100,
+        currency: "usd",
+        quantity: 1,
+      },
+    ],
+    // 6 create payment intent with application fee and destoinatio charge %80
+    // change fee and destionation
+    payment_intent_data: {
+      application_fee_amount: fee * 100,
+      // seller can see his balance his balance in our front end dashboard
+      transfer_data: {
+        destination: item.postedBy.stripe_account_id,
+      },
+    },
+    // success and cancel urls
+    success_url: `${process.env.STRIPE_SUCCESS_URL}/${item._id}`,
+    cancel_url: process.env.STRIPE_CANCEL_URL,
+  });
+  // 7 add this ession object to user in the db
+  await User.findByIdAndUpdate(req.user._id, { stripeSession: session }).exec();
+  // 8 send session id as a response to front end
+  res.send({
+    sessionId: session.id,
+  });
+
+  // console.log("SESSION ===>", session);
+};
+
+export const stripeSuccess = async (req, res) => {
+  try {
+    // 1 het hotel id from req.body
+    const { hotelId } = req.body;
+    // 2 find current logged in user
+    const user = await User.findById(req.user._id).exec();
+    // check if user has stripeSession
+    if (!user.stripeSession) return;
+    // 3 retrieve stripe session previously saved in database
+    const session = await stripe.checkout.sessions.retrieve(
+      user.stripeSession.id
+    );
+    // 4 if session payment status is paid, create order
+    if (session.payment_status === "paid") {
+      // 5 check if order with id already exist by querying order collections
+      const orderExist = await Order.findOne({
+        "session.id": session.id,
+      }).exec();
+      if (orderExist) {
+        // 6 if order exist send success true
+        res.json({ success: true });
+      } else {
+        // 7 else create new order and send success true
+        let newOrder = await new Order({
+          hotel: hotelId,
+          session,
+          orderedBy: user._id,
+        }).save();
+        // 8 remove users stripeSession
+        await User.findByIdAndUpdate(user._id, {
+          $set: { stripeSession: {} },
+        });
+        res.json({ success: true });
+      }
+    }
+  } catch (err) {
+    console.log("STRIPE SUCCESS ERR", err);
   }
 };

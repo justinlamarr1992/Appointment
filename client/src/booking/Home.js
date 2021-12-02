@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { allHotels } from "../actions/hotel";
 import SmallCard from "../components/cards/SmallCard";
+import Search from "../components/forms/Search";
 
 const Home = () => {
   const [hotels, setHotels] = useState([]);
@@ -17,8 +18,11 @@ const Home = () => {
       <div className="container-fluid p-5 text-center bg-secondary">
         <h1>All Hotels</h1>
       </div>
+      <div className="col">
+        <br />
+        <Search />
+      </div>
       <div className="container-fluid">
-        {/* this */}
         <br />
         {/* <pre>{JSON.stringify(hotels, null, 4)}</pre> */}
         {hotels.map((h) => (
